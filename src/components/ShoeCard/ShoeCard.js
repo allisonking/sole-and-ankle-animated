@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components/macro';
+import React from "react";
+import styled from "styled-components/macro";
 
-import { WEIGHTS } from '../../constants';
-import { formatPrice, pluralize, isNewShoe } from '../../utils';
-import Spacer from '../Spacer';
+import { QUERIES, WEIGHTS } from "../../constants";
+import { formatPrice, pluralize, isNewShoe } from "../../utils";
+import Spacer from "../Spacer";
 
 const ShoeCard = ({
   slug,
@@ -34,32 +34,30 @@ const ShoeCard = ({
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
-        <ImageWrapper>
-          <Image alt="" src={imageSrc} />
-          {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
-          {variant === 'new-release' && (
-            <NewFlag>Just released!</NewFlag>
-          )}
-        </ImageWrapper>
+        <ImageAndFlagWrapper>
+          <ImageWrapper>
+            <Image alt="" src={imageSrc} />
+          </ImageWrapper>
+          {variant === "on-sale" && <SaleFlag>Sale</SaleFlag>}
+          {variant === "new-release" && <NewFlag>Just released!</NewFlag>}
+        </ImageAndFlagWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
           <Price
             style={{
-              '--color':
-                variant === 'on-sale'
-                  ? 'var(--color-gray-700)'
-                  : undefined,
-              '--text-decoration':
-                variant === 'on-sale' ? 'line-through' : undefined,
+              "--color":
+                variant === "on-sale" ? "var(--color-gray-700)" : undefined,
+              "--text-decoration":
+                variant === "on-sale" ? "line-through" : undefined,
             }}
           >
             {formatPrice(price)}
           </Price>
         </Row>
         <Row>
-          <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
-          {variant === 'on-sale' ? (
+          <ColorInfo>{pluralize("Color", numOfColors)}</ColorInfo>
+          {variant === "on-sale" ? (
             <SalePrice>{formatPrice(salePrice)}</SalePrice>
           ) : undefined}
         </Row>
@@ -75,13 +73,29 @@ const Link = styled.a`
 
 const Wrapper = styled.article``;
 
-const ImageWrapper = styled.div`
+const ImageAndFlagWrapper = styled.div`
   position: relative;
+`;
+
+const ImageWrapper = styled.div`
+  border-radius: 16px 16px 4px 4px;
+  // so that scaling will trim off excess
+  overflow: hidden;
 `;
 
 const Image = styled.img`
   width: 100%;
-  border-radius: 16px 16px 4px 4px;
+  display: block;
+  will-change: transform;
+
+  @media ${QUERIES.reducedMotionNoPreference} {
+    transition: transform 500ms;
+    &:hover {
+      transform: scale(1.1);
+      transition: transform 200ms;
+      transform-origin: 50% 60%;
+    }
+  }
 `;
 
 const Row = styled.div`
@@ -121,6 +135,13 @@ const Flag = styled.div`
   font-weight: ${WEIGHTS.bold};
   color: var(--color-white);
   border-radius: 2px;
+
+  @media ${QUERIES.reducedMotionNoPreference} {
+    ${Link}:hover & {
+      transition: transform 100ms;
+      transform: rotate(5deg);
+    }
+  }
 `;
 
 const SaleFlag = styled(Flag)`
