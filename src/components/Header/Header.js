@@ -1,13 +1,22 @@
-import React from 'react';
-import styled from 'styled-components/macro';
+import React from "react";
+import styled from "styled-components/macro";
 
-import { QUERIES, WEIGHTS } from '../../constants';
-import Logo from '../Logo';
-import Icon from '../Icon';
-import UnstyledButton from '../UnstyledButton';
-import SuperHeader from '../SuperHeader';
-import MobileMenu from '../MobileMenu';
-import VisuallyHidden from '../VisuallyHidden';
+import { COLORS, QUERIES, WEIGHTS } from "../../constants";
+import Logo from "../Logo";
+import Icon from "../Icon";
+import UnstyledButton from "../UnstyledButton";
+import SuperHeader from "../SuperHeader";
+import MobileMenu from "../MobileMenu";
+import VisuallyHidden from "../VisuallyHidden";
+
+const NavLink = ({ href, children }) => {
+  return (
+    <NavLinkWrapper href={href}>
+      <TopNavText>{children}</TopNavText>
+      <BottomNavText aria-hidden="true">{children}</BottomNavText>
+    </NavLinkWrapper>
+  );
+};
 
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = React.useState(false);
@@ -114,15 +123,49 @@ const Filler = styled.div`
   }
 `;
 
-const NavLink = styled.a`
+const NavLinkWrapper = styled.a`
+  display: block;
+  position: relative;
   font-size: 1.125rem;
   text-transform: uppercase;
-  text-decoration: none;
   color: var(--color-gray-900);
   font-weight: ${WEIGHTS.medium};
+  // display: flex;
+  // flex-direction: column;
+  overflow: hidden;
 
   &:first-of-type {
     color: var(--color-secondary);
+  }
+`;
+
+const Text = styled.span`
+  display: block;
+`;
+
+const TopNavText = styled(Text)`
+  transform: translateY(0%);
+  transition: transform 300ms;
+  ${NavLinkWrapper}:hover & {
+    @media ${QUERIES.reducedMotionNoPreference} {
+      will-change: transform;
+      transform: translateY(-100%);
+    }
+  }
+`;
+
+const BottomNavText = styled(Text)`
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(100%);
+  transition: transform 300ms;
+  font-weight: ${WEIGHTS.bold};
+  ${NavLinkWrapper}:hover & {
+    @media ${QUERIES.reducedMotionNoPreference} {
+      will-change: transform;
+      transform: translateY(0%);
+    }
   }
 `;
 
