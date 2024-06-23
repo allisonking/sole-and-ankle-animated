@@ -12,8 +12,7 @@ import VisuallyHidden from "../VisuallyHidden";
 const NavLink = ({ href, children }) => {
   return (
     <NavLinkWrapper href={href}>
-      <TopNavText>{children}</TopNavText>
-      <BottomNavText aria-hidden="true">{children}</BottomNavText>
+      <Link>{children}</Link>
     </NavLinkWrapper>
   );
 };
@@ -124,23 +123,51 @@ const Filler = styled.div`
 `;
 
 const NavLinkWrapper = styled.a`
+  --font-size: 1.125rem;
   display: block;
   position: relative;
-  font-size: 1.125rem;
+  font-size: var(--font-size);
   text-transform: uppercase;
   color: var(--color-gray-900);
   font-weight: ${WEIGHTS.medium};
-  // display: flex;
-  // flex-direction: column;
-  overflow: hidden;
+  text-decoration: none;
 
   &:first-of-type {
     color: var(--color-secondary);
   }
 `;
 
-const Text = styled.span`
-  display: block;
+const Link = styled.span`
+  &:before {
+    content: "";
+    width: 100%;
+    position: absolute;
+    background: var(--color-secondary);
+    height: 2px;
+    left: 0;
+    bottom: 0;
+    transition: transform 500ms;
+  }
+  &:after {
+    content: "";
+    width: 100%;
+    position: absolute;
+    background: var(--color-secondary);
+    height: 2px;
+    left: 0;
+    bottom: 0;
+    transition: transform 500ms;
+  }
+
+  ${NavLinkWrapper}:hover &:after {
+    transform: scaleX(1.1);
+    transition: transform 200ms;
+  }
+
+  ${NavLinkWrapper}:hover &:before {
+    transform: translateY(calc(var(--font-size) * -1 - 6px));
+    transition: transform 200ms;
+  }
 `;
 
 const TopNavText = styled(Text)`
